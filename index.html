@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="favicon.ico">
+<title>XShaft Program Generator</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.scrollbar.min.js"></script>
+    <script type="text/javascript">
+        window.machineZeros = {
+            "vices" : {
+                1 : 0,
+                2 : -56.7,
+                3 : -81.9,
+                4 : -106.9
+            },
+            "y" : -12.332,
+            "z" : -27.38
+        };
+/*
+        $(function() {
+            $("pre#code").customScrollbar();
+        });
+*/
+		function resetForm() {
+			if (confirm("Reset The xShaft Generator?")) {
+				location.reload(false);
+			}
+		}
+    </script>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/scrollbar.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body {font-family: 'Droid Sans', sans-serif;}
+        #container{margin:50px 10px;padding:10px;}
+
+        .input-group-addon {font-weight:bold;font-size:14pt;}
+        .left {float:left;}
+        .yellow{background-color: yellow;}
+        .white{background-color: white;}
+
+        label{font-size:larger;}
+
+        pre {font-family: 'Droid Sans Mono', sans-serif;font-weight:bold;font-size:10pt;}
+        pre#code {height:650px;}
+    </style>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">XShaft Program Generator</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <!--<li>
+                        <a id="save" href="#">
+                            <i class="fa fa-fw fa-save"></i>&nbsp;&nbsp;Save Program</a>
+                    </li>-->
+					<li>
+                        <a id="save" href="#" onclick="resetForm()">
+                            <i class="fa fa-fw fa-refresh"></i>&nbsp;&nbsp;Reset</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a id="flashdrive-missing" href="#" style="color:#FE2E2E;display:none;" onClick="return false;">Flashdrive Not Found&nbsp;&nbsp;<i class="fa fa-fw fa-square-o"></i></a>
+                        <a id="flashdrive-present" href="#" style="color:#64FE2E;display:none;" onClick="return false;">Flashdrive Present&nbsp;&nbsp;<i class="fa fa-fw fa-check-square-o"></i></a>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+
+
+	<h3>&nbsp;&nbsp;&nbsp;Double check for an existing program before generating a new one.</h3>
+<div id="container" class="container-fluid">
+    
+	<div class="row">
+        <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="program_num">Program Number</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">O</span>
+                            <input class="int form-control" id="program_num" name="program_num" size="5" maxlength="5" placeholder="12345" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label for="program_title">Program Title</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">(</span>
+                            <input class="form-control" id="program_title" name="program_title" placeholder="HB123-54M_B" />
+                            <span class="input-group-addon">)</span>
+                        </div>
+                    </div>
+                </div><!--/row-->
+                <br />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="part_length">XShaft<sub>Length</sub></label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
+                            <input class="int form-control" id="part_length" name="part_length" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="program_title">XShaft<sub>Diameter</sub></label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-ban"></i></span>
+                            <input class="int form-control" id="part_diameter" name="part_diameter" />
+                        </div>
+                    </div>
+                </div><!--/row-->
+                <br />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>1/4-18 NPT Holes</h3>
+                        <div class="btn-group btn-group-justified">
+                            <a class="btn btn-default" id="npt1-4_minus"><i class="fa fa-minus-square"></i></a>
+                            <a class="btn btn-default" id="npt1-4_plus"><i class="fa fa-plus-square"></i></a>
+                        </div>
+                        <input type="hidden" id="npt1-4_num" value="0" />
+                        <br />
+                        <div class="left" id="npt1-4_table"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h3>1/8-27 NPT Holes</h3>
+                        <div class="btn-group btn-group-justified">
+                            <a class="btn btn-default" id="npt1-8_minus"><i class="fa fa-minus-square"></i></a>
+                            <a class="btn btn-default" id="npt1-8_plus"><i class="fa fa-plus-square"></i></a>
+                        </div>
+                        <input type="hidden" id="npt1-8_num" value="0" />
+                        <br />
+                        <div class="left" id="npt1-8_table"></div>
+                    </div>
+                </div><!--/row-->
+
+            <div class="col-md-06">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label>Generated Program</label>
+<pre id="code" class="default-skin" style="overflow:scroll;">
+%
+O<span id="code_program_num">00000</span> (<span id="code_program_title">title</span>)
+(GENERATED XSHAFT PROGRAM)
+<!--
+(G54)
+G10 G90 L2 P1 X<span id="code_g10_x">0.</span> Y<span id="code_g10_y">0.</span> Z<span id="code_g10_z">0.</span>
+-->
+N1 G00 G17 G20 G40 G49 G80 G90
+T1 M06 (1/2" [.500] DOWEL)
+M01 (1/2" [.500] DOWEL)
+G00 G90 G54 X-.25 Y0.
+G43 H1 Z1. T2
+G01 Z-.3 F30.
+M00 (STOP PART)
+G00 Z1.
+G80
+M05 G91 G28 Z0.
+M19
+/ G00 G90 G53 X<span class="clfu_x">0.</span> Y0.
+/ M00 (WHACK 'EM)
+
+N2 G00 G17 G20 G40 G49 G80 G90
+T2 M06 (5/8" [.625] 120 DEG SPOT DRILL)
+M01 (5/8" [.625] 120 DEG SPOT DRILL)
+S1200 M03
+G00 G90 G54 X<span id="code_spot_drill_start">0.</span> Y0.
+G43 H2 Z1. T3
+M08
+G98 G81 Z<span id="code_spot_drill_start_depth">0.</span> R.1 F6.
+<span id="code_spot_drill_locations"></span>G80 M09
+M05 G91 G28 Z0.
+M19
+M01
+
+N3 G00 G17 G20 G40 G49 G80 G90
+T3 M06 (LTR. R [.339] DRILL FOR 1/8-27 NPT TAP)
+M01 (LTR. R [.339] DRILL FOR 1/8-27 NPT TAP)
+S1070 M03
+G00 G90 G54 <span id="code_r_drill_start">X0.</span> Y0.
+G43 H3 Z1. T5
+M08
+G98 G83 Z-.7018 R.1 Q.1865 F5.5
+<span id="code_r_drill_locations"></span>G80 M09
+M05 G91 G28 Z0.
+M19
+M01
+
+N5 G00 G17 G20 G40 G49 G80 G90
+T5 M06 (7/16" [.4375] DRILL FOR 1/4-18 NPT TAP)
+M01 (7/16" [.4375] DRILL FOR 1/4-18 NPT TAP)
+S830 M03
+G00 G90 G54 <span id="code_7_16_drill_start">X0.</span> Y0.
+G43 H5 Z1. T4
+M08
+G98 G83 Z-.7314 R.1 Q.2 F5.6
+<span id="code_7_16_drill_locations"></span>G80 M09
+M05 G91 G28 Z0.
+M19
+M01
+
+N4 G00 G17 G20 G40 G49 G80 G90
+T4 M06 (1/8"-27 NPT TAP)
+M01 (1/8"-27 NPT TAP)
+M00 (LUBE TAP)
+S270 M03
+G00 G90 G54 <span id="code_1_8_npt_start">X0.</span> Y0.
+G43 H4 Z1. T6
+G98 G84 Z-.44 R.1 F10.
+<span id="code_1_8_npt_locations"></span>G80
+M05 G91 G28 Z0.
+M19
+M01
+
+N6 G00 G17 G20 G40 G49 G80 G90
+T6 M06 (1/4"-18 NPT TAP)
+M01 (1/4"-18 NPT TAP)
+M00 (LUBE TAP)
+S180 M03
+G00 G90 G54 <span id="code_1_4_npt_start">X0.</span> Y0.
+G43 H6 Z1. T1
+G98 G84 Z-.7 R.1 F10.
+<span id="code_1_4_npt_locations"></span>G80
+M05 G91 G28 Z0.
+M19
+G00 G90 G53 X<span class="clfu_x">0.</span> Y0.
+T1 M6
+M30
+%</pre>
+        </div>
+
+    </div><!--/row-->
+</div><!--/container-->
+
+<script type="text/javascript" src="js/functions.js"></script>
+<script type="text/javascript" src="js/master.js"></script>
+
+</body>
+</html>
